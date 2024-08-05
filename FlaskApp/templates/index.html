@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Skill Matcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        .category {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .category-title {
+            font-weight: bold;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .skill-item {
+            display: flex;
+            align-items: center;
+        }
+        .skill-item input {
+            margin-right: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h2 {
+            margin-top: 40px;
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #e9ecef;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .category-error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter Skills to Find Similar Users</h1>
+        <p>Please select up to 7 skills in total.</p>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+        <form method="POST" id="skillForm">
+            {% for category, skills in skill_categories.items() %}
+            <div class="category">
+                <div class="category-title">{{ category }}</div>
+                <div class="skills-grid">
+                    {% for skill in skills %}
+                    <div class="skill-item">
+                        <input type="checkbox" id="{{ skill }}" name="skills" value="{{ skill }}" class="skill-checkbox" data-category="{{ category }}">
+                        <label for="{{ skill }}">{{ skill }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if error_message %}
+        <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('skillForm');
+            const checkboxes = document.querySelectorAll('.skill-checkbox');
+            const errorMessage = document.getElementById('errorMessage');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const totalChecked = document.querySelectorAll('.skill-checkbox:checked').length;
+                    if (totalChecked > 7) {
+                        this.checked = false;
+                        errorMessage.textContent = 'You can only select up to 7 skills in total.';
+                        errorMessage.style.display = 'block';
+                    } else {
+                        errorMessage.style.display = 'none';
+                    }
+                });
+            });
+
+            form.addEventListener('submit', function(event) {
+                const totalChecked = document.querySelectorAll('.skill-checkbox:checked').length;
+
+                if (totalChecked > 7) {
+                    event.preventDefault();
+                    errorMessage.textContent = 'Please select a maximum of 7 skills in total.';
+                    errorMessage.style.display = 'block';
+                } else if (totalChecked === 0) {
+                    event.preventDefault();
+                    errorMessage.textContent = 'Please select at least one skill.';
+                    errorMessage.style.display = 'block';
+                } else {
+                    errorMessage.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

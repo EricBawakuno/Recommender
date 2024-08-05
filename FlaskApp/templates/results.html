@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Similar Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 100px;
+            flex-flow: wrap;
+        }
+
+        .ul {
+            flex-flow: nowrap;
+            list-style: none;
+            padding: 0;
+            width: 20%;
+            display: flex;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        li {
+            background: #e9ecef;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .class-li {
+            background: #e9ecef !important;
+            border-radius: 5px !important;
+            margin: 5px 0;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .fa {
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            margin: 5px 2px;
+            border-radius: 17px;
+        }
+
+        .icons{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .fa:hover {
+            opacity: 0.7;
+        }
+
+        .fa-facebook {
+            background: #3B5998;
+            color: white;
+        }
+
+        .fa-twitter {
+            background: #55ACEE;
+            color: white;
+        }
+
+        .fa-linkedin {
+            background: #007bb5;
+            color: white;
+        }
+
+        .fa-instagram {
+            background: #125688;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Skill Matcher Results</h1>
+        <div class="section">
+            <h2>Selected Skills:</h2>
+            <ul class="ul">
+                {% for skill in selected_skills %}
+                <li class="class-li">{{ skill }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Your Top Similar Users:</h2>
+            {% if top_users %}
+            <ul>
+                {% for user_id, similarity in top_users.items() %}
+                <li>
+                    <img src="https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg?s=1024x1024&w=is&k=20&c=er-yFBCv5wYO_curZ-MILgW0ECSjt0DDg5OlwpsAgZM=" alt="profile photo">
+                    </br>
+                    </br>
+                    User ID: {{ user_id }}
+                    </br>
+                    <span class="similarity-score">Similarity Score: {{ (similarity * 100)|round(2) }}%</span>
+                    <hr>
+                    <div class="icons">
+                        <a href="#" class="fa fa-facebook"></a>
+                        <a href="#" class="fa fa-twitter"></a>
+                        <a href="#" class="fa fa-linkedin"></a>
+                        <a href="#" class="fa fa-instagram"></a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No users found with more than 10% similarity.</p>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h2>Meet Other People:</h2>
+            {% if other_users %}
+            <ul>
+                {% for user_id, similarity in other_users.items() %}
+                <li>
+                    <img src="https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg?s=1024x1024&w=is&k=20&c=er-yFBCv5wYO_curZ-MILgW0ECSjt0DDg5OlwpsAgZM=" alt="profile photo">
+                    </br>
+                    </br>
+                    User ID: {{ user_id }}
+                    </br>
+                    <span class="similarity-score">Similarity Score: {{ (similarity * 100)|round(2) }}%</span>
+                    <hr>
+                    <div class="icons">
+                        <a href="#" class="fa fa-facebook"></a>
+                        <a href="#" class="fa fa-twitter"></a>
+                        <a href="#" class="fa fa-linkedin"></a>
+                        <a href="#" class="fa fa-instagram"></a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No other users found.</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{{ url_for('index') }}" class="back-link">Back to Skill Selection</a>
+</body>
+
+</html>
